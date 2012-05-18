@@ -7,24 +7,38 @@
 #
 use Modern::Perl;
 use Bio::DB::Fasta;
+use Bio::SeqIO;
+use Getopt::Long;
 
-my $file_in = $ARGV[0];
-my $match_id = $ARGV[1];
-#
-my $db = Bio::DB::Fasta->new($file_in);
-my @ids_all = $db->ids;
-my $match_full;
-my @testarray;
+my ($fa_file, $match_id);
+
+my $options = GetOptions (
+    "fasta=s" => \$fa_file,
+    "id=s"    => \$match_id,
+);
+
+my $out = Bio::SeqIO->new(
+    -file   => ">outputfilename" ,
+    -format => 'Fasta'
+);
+
+my $seq_db = Bio::DB::Fasta->new($fa_file);
+
+#get all gene IDs that match query
+my @ids_all = $seq_db->ids;
+my @matches_full;
 for my $id (@ids_all) {
-    $match_full = $1 if $id  =~ m/(.*$match_id.*)/i; #what if multiple??
-    push @testarray, $1 if $id  =~ m/(.*$match_id.*)/i;
+    push @matches_full, $1 if $id  =~ m/(.*$match_id.*)/i; #what if multiple??
 }
 
-say scalar @testarray;
-
-my $seq = $db->seq($match_full);
-say "$match_full:$seq" if defined $seq;
-
+#write output fasta file for all queries
+for my $seq_id (sort @matches_full) {
+    my $seqobj = Bio::Seq->new(
+        -display_id => $seq_id,
+        -seq        => $seq_db->seq($seq_id)
+    );
+    $out->write_seq($seqobj);
+}
 
 
 

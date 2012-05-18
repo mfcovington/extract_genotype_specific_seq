@@ -3,7 +3,7 @@
 # Mike Covington
 # created: 2012-05-17
 #
-# Description:
+# Description: Extracts fasta sequences for specified gene(s)
 #
 use Modern::Perl;
 use autodie;
@@ -24,7 +24,7 @@ my $options = GetOptions(
 );
 
 #help/usage
-my $prog = basename($0);
+my $prog  = basename($0);
 my $usage = "use!";
 print_usage() and exit if $help;
 print_usage() and exit unless defined $fasta_in and defined $gene_id;
@@ -38,6 +38,7 @@ if ($list) {
         push @gene_list, $line;
     }
     close $gene_list_fh;
+    $gene_id = basename($gene_id);
 }
 else { push @gene_list, $gene_id; }
 
@@ -45,7 +46,7 @@ else { push @gene_list, $gene_id; }
 my $seq_db = Bio::DB::Fasta->new($fasta_in);
 my $out    = Bio::SeqIO->new(
     -file   => ">$out_dir/$gene_id.fasta",
-    -format => 'Fasta'
+    -format => 'Fasta',
 );
 
 for my $match_id (@gene_list) {
@@ -87,7 +88,7 @@ OPTIONS
 OUTPUT
   An output file in fasta format is written to the current directory, 
   unless an output directory is specified.
-  The name of the file is GENE.ID.fasta.
+  The name of the output file is GENE.ID.fasta.
 
 EXAMPLES
   $prog -f ITAG2.3_cds_SHORTNAMES.fasta -g Solyc10g044670 -o seq_directory

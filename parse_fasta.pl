@@ -24,8 +24,7 @@ my $options = GetOptions(
 );
 
 #help/usage
-my $prog  = basename($0);
-my $usage = "use!";
+my $prog = basename($0);
 print_usage() and exit if $help;
 print_usage() and exit unless defined $fasta_in and defined $gene_id;
 

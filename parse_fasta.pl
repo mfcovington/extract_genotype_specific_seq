@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 # parse_fasta.pl
 # Mike Covington
 # created: 2012-05-17
@@ -11,6 +11,8 @@ use Bio::DB::Fasta;
 use Bio::SeqIO;
 use Getopt::Long;
 use File::Basename;
+
+#TODO: incorporate fasta name into output??
 
 #options/defaults
 my ( $fasta_in, $gene_id, $list, $help );

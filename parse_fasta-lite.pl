@@ -14,7 +14,8 @@ my $usage = <<EOF;
 USAGE: $0 SEQUENCE_FILE FASTA_FILE [CUSTOM_DELIMITER]
 EOF
 
-die $usage if scalar @ARGV < 3;
+my $argv_count = scalar @ARGV;
+die $usage unless $argv_count == 2 || $argv_count == 3;
 
 my $gene_list = $ARGV[0];
 my $fasta     = $ARGV[1];

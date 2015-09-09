@@ -9,6 +9,7 @@ use strict;
 use warnings;
 use autodie;
 use v5.10;
+use File::Basename;
 
 my $usage = <<EOF;
 USAGE: $0 SEQUENCE_FILE FASTA_FILE [CUSTOM_DELIMITER]
@@ -26,8 +27,10 @@ open my $gene_list_fh, "<", $gene_list;
 my %genes = map { chomp; $_ => 1 } <$gene_list_fh>;
 close $gene_list_fh;
 
+my $fasta_basename = fileparse $fasta, qr/\.fa(sta)?/i;
+
 open my $fa_fh,     "<", $fasta;
-open my $fa_out_fh, ">", "$gene_list.$fasta";
+open my $fa_out_fh, ">", "$gene_list.$fasta_basename.fa";
 my $hit = 0;
 while (<$fa_fh>) {
     if (/^>([^\s$delimiter]+)/) {
